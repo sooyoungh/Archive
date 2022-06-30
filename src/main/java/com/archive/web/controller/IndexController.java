@@ -1,20 +1,34 @@
 package com.archive.web.controller;
 
+import com.archive.service.posts.PostsService;
+import com.archive.web.dto.SessionUser;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
+
+@RequiredArgsConstructor
 @Controller
 public class IndexController {
 
-    @GetMapping("/")
-    public String hello() {
-        return "index";
-    }
+    private final HttpSession httpSession;
+    private final PostsService postsService;
 
     @GetMapping("/posts/save")
     public String postsSave() {
         return "posts-save";
+    }
+
+    @GetMapping("/")
+    public String index(Model model) {
+        model.addAttribute("posts", postsService.findAllDesc());
+        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("userName", user.getName());
+        }
+        return "index";
     }
 
 }
