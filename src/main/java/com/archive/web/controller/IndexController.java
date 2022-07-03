@@ -1,5 +1,6 @@
 package com.archive.web.controller;
 
+import com.archive.config.auth.LoginUser;
 import com.archive.service.posts.PostsService;
 import com.archive.web.dto.SessionUser;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,20 @@ public class IndexController {
         return "posts-save";
     }
 
+//    @GetMapping("/")
+//    public String index(Model model) {
+//        model.addAttribute("posts", postsService.findAllDesc());
+//        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+//        if (user != null) {
+//            model.addAttribute("userName", user.getName());
+//        }
+//        return "index";
+//    }
+
+    // 어노테이션 기반 수정
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, @LoginUser SessionUser user) {
         model.addAttribute("posts", postsService.findAllDesc());
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
         if (user != null) {
             model.addAttribute("userName", user.getName());
         }
